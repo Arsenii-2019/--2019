@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYSHOP — Интернет-магазин</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Шапка сайта -->
+    <header class="site-header">
+        <div class="container header-content">
+            <a href="#" class="logo">MYSHOP</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#catalog">Каталог</a></li>
+                    <li><a href="#orders">Мои заказы</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <!-- Блок профиля (виден после входа) -->
+                <div id="user-profile" class="profile-block" style="display: none;">
+                    <span class="user-name">Привет, <strong id="username-display"></strong>!</span>
+                    
+                    <!-- КНОПКА ПАНЕЛИ РАЗРАБОТЧИКА (видна только админу) -->
+                    <button id="admin-panel-btn" class="btn-small" style="background: #f1c40f; color: #333; margin-right: 10px; display: none;" onclick="openAdminPanel()">
+                        🛠 Панель разработчика
+                    </button>
+                    
+                    <button class="btn-small" onclick="logout()">Выйти</button>
+                </div>
+
+                <!-- Кнопка входа (видна до входа) -->
+                <button class="auth-btn" id="login-trigger" onclick="openAuthModal()">
+                    👤 Войти / Регистрация
+                </button>
+
+                <!-- Корзина -->
+                <button class="cart-btn" onclick="openCart()">
+                    🛒 <span id="cart-count">0</span> (<span id="cart-total">0</span> ₽)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Каталог товаров -->
+    <section id="catalog" class="container section-padding">
+        <h2>Популярные товары</h2>
+        <div class="products-grid" id="products-list">
+            <!-- Товары генерируются JS -->
+        </div>
+    </section>
+
+    <!-- Личный кабинет: История заказов -->
+    <section id="orders" class="container section-padding">
+        <h2>Мои заказы</h2>
+        <div id="orders-history" class="orders-list">
+            <p style="color: #777;">Здесь пока нет ваших заказов. Оформите первый заказ в корзине!</p>
+        </div>
+    </section>
+
+    <!-- Модальное окно: Авторизация (Вход / Регистрация / Разработчик) -->
+    <div id="auth-modal" class="modal-overlay">
+        <div class="auth-window">
+            <div class="auth-header">
+                <h2 id="auth-title">Вход в аккаунт</h2>
+                <button class="close-btn" onclick="closeAuthModal()">&times;</button>
+            </div>
+            
+            <!-- Переключатель вкладок -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Войти</button>
+                <button class="tab-btn" onclick="switchTab('register')">Регистрация</button>
+                <!-- НОВАЯ ВКЛАДКА ДЛЯ РАЗРАБОТЧИКА -->
+                <button class="tab-btn" onclick="switchTab('dev')" style="background: #9b59b6; color: white;">Для разработчика</button>
+            </div>
+
+            <!-- Форма ВХОДА -->
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="example@mail.ru">
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" name="password" required minlength="4">
+                </div>
+                <button type="submit" class="checkout-btn">Войти</button>
+                <p id="login-error" class="error-msg"></p>
+            </form>
+
+            <!-- Форма РЕГИСТРАЦИИ -->
+            <form id="register-form" class="auth-form hidden">
+                <div class="form-group">
+                    <label>Имя</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" name="password" required minlength="4" placeholder="Минимум 4 символа">
+                </div>
+                <button type="submit" class="checkout-btn">Зарегистрироваться</button>
+                <p id="register-error" class="error-msg"></p>
+            </form>
+
+            <!-- ФОРМА ДЛЯ РАЗРАБОТЧИКА -->
+            <form id="dev-form" class="auth-form hidden">
+                <div class="form-group">
+                    <label>Код доступа</label>
+                    <input type="text" id="dev-code" name="code" required placeholder="Введите код разработчика">
+                </div>
+                <button type="button" class="checkout-btn" onclick="checkDevCode()">Войти как DevAdmin</button>
+                <p id="dev-error" class="error-msg"></p>
+                <p style="font-size: 12px; color: #666; margin-top: 10px; text-align: center;">
+                    Используйте код: <b>RTBNH-THJGT-PQMSL-2019</b>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО: ПАНЕЛЬ РАЗРАБОТЧИКА (Управление товарами) -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="admin-window" style="width: 90%; max-width: 600px;">
+            <div class="cart-header">
+                <h2>Панель разработчика: Управление товарами</h2>
+                <button class="close-btn" onclick="closeAdminPanel()">&times;</button>
+            </div
